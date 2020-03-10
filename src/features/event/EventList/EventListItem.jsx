@@ -14,6 +14,7 @@ class EventListItem extends Component {
       venue,
       description
     } = this.props.event;
+
     return (
       <Segment.Group>
         <Segment>
@@ -21,9 +22,8 @@ class EventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={hostPhotoURL} />
               <Item.Content>
-                <Item.Header as="a">{title}</Item.Header>
+                <Item.Header>{title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{hostedBy}</a>
                 </Item.Description>
               </Item.Content>
             </Item>
@@ -37,7 +37,7 @@ class EventListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {attendees.map(attendee => (
+            {attendees && attendees.map(attendee => (
               <EventListAttendee key={attendee.id} attendee={attendee} />
             ))}
           </List>

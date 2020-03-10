@@ -3,6 +3,7 @@ import { Grid, Button } from 'semantic-ui-react'
 
 import EventList from '../EventList/EventList'
 import EventForm from '../EventForm/EventForm'
+import cuid from 'cuid';
 
 
 const eventsFromDashboard = [
@@ -58,20 +59,46 @@ const eventsFromDashboard = [
 
 
 class EventDashboard extends Component {
+  state = {
+    events: eventsFromDashboard,
+    isOpen: false
+  }
 
-    render () {
-        return (
-          <Grid>
-            <Grid.Column width={10}>
-              <EventList events={eventsFromDashboard} />
-            </Grid.Column>
-            <Grid.Column width={6}>
-              <Button positive content='Create Event' />
-              <EventForm />
-            </Grid.Column>
-          </Grid>
-        )
-    }
+  handleIsOpenToggle = () => {
+    // this.setState({
+    //   isOpen: !this.state.isOpen
+    //   // isOpen: true
+    // })
+    this.setState((prevState) => ({
+      isOpen: !prevState.isOpen
+    }))
+  }
+
+  handleCreateEvent = (newEvent) => {
+    newEvent.id = cuid();
+    newEvent.hostPhotoURL = '/assets/user.png';
+    // newEvent.attendees = [];
+    this.setState((prevState) => ({
+      events: [...prevState.events, newEvent],
+      isOpen: false
+    }));
+    console.log(this.state);
+  }
+
+  render () {
+    const {events, isOpen} = this.state;
+    return (
+      <Grid>
+        <Grid.Column width={10}>
+          <EventList events={events} />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <Button onClick={this.handleIsOpenToggle} positive content='Create Event' />
+          {isOpen && <EventForm createEvent={this.handleCreateEvent} cancelFormOpen={this.handleIsOpenToggle} />}
+        </Grid.Column>
+      </Grid>
+    )
+  }
 }
 
 export default EventDashboard
