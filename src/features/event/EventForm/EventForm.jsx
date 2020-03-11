@@ -10,11 +10,23 @@ export default class EventForm extends Component {
     venue: '',
     hostedBy: ''
   }
+  
+  componentDidMount() {
+    if(this.props.selectedEvent !== null) {
+      this.setState({
+        ...this.props.selectedEvent, 
+      })
+    }
+  }
 
   handleFormSubmit = (evt) => {
     evt.preventDefault();
-    console.log(this.state);
-    this.props.createEvent(this.state);
+    // console.log(this.state);
+    if(this.state.id) {
+      this.props.updateEvent(this.state);
+    } else {
+      this.props.createEvent(this.state);
+    }
   }
 
   handleInputChange = (evt) => {
@@ -75,7 +87,7 @@ export default class EventForm extends Component {
           </Form.Field>
           <Button positive type="submit">
             Submit
-          </Button>
+           </Button>
           <Button onClick={cancelFormOpen} type="button">Cancel</Button>
         </Form>
       </Segment>

@@ -8,12 +8,14 @@ class EventListItem extends Component {
     const {
       title,
       hostPhotoURL,
-      hostedBy,
+      // hostedBy,
       attendees,
       date,
       venue,
       description
     } = this.props.event;
+
+    const { event, isOpen, selectEvent, deleteEvent } = this.props;
 
     return (
       <Segment.Group>
@@ -23,8 +25,7 @@ class EventListItem extends Component {
               <Item.Image size="tiny" circular src={hostPhotoURL} />
               <Item.Content>
                 <Item.Header>{title}</Item.Header>
-                <Item.Description>
-                </Item.Description>
+                <Item.Description></Item.Description>
               </Item.Content>
             </Item>
           </Item.Group>
@@ -37,14 +38,28 @@ class EventListItem extends Component {
         </Segment>
         <Segment secondary>
           <List horizontal>
-            {attendees && attendees.map(attendee => (
-              <EventListAttendee key={attendee.id} attendee={attendee} />
-            ))}
+            {attendees &&
+              attendees.map(attendee => (
+                <EventListAttendee key={attendee.id} attendee={attendee} />
+              ))}
           </List>
         </Segment>
         <Segment clearing>
           <span>{description}</span>
-          <Button as="a" color="teal" floated="right" content="View" />
+          <Button
+            onClick={() => deleteEvent(event.id)}
+            as="a"
+            color="red"
+            floated="right"
+            content="Delete"
+          />
+          <Button
+            onClick={() => selectEvent(event)}
+            as="a"
+            color="teal"
+            floated="right"
+            content="View"
+          />
         </Segment>
       </Segment.Group>
     );
