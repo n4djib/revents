@@ -15,7 +15,7 @@ class EventListItem extends Component {
       description
     } = this.props.event;
 
-    const { event, isOpen, selectEvent, deleteEvent } = this.props;
+    const { event, selectEvent, deleteEvent } = this.props;
 
     return (
       <Segment.Group>
