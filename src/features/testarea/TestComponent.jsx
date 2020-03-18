@@ -21,10 +21,10 @@ const mapStateToProps = state => ({
   data: state.test.data
 });
 
-// const mapDispatchToProps = dispatch => {
-//     incrementCounter: dispatch(incrementCounter),
-//     decrementCounter: dispatch(decrementCounter)
-// }
+// const mapDispatchToProps = dispatch => ({
+//     incrementCounter: () => dispatch(incrementCounter()),
+//     decrementCounter: () => dispatch(decrementCounter())
+// })
 
 const actions = {
   incrementCounter,
@@ -32,3 +32,4 @@ const actions = {
 };
 
 export default connect(mapStateToProps, actions)(TestComponent);
+// export default connect(mapStateToProps, mapDispatchToProps)(TestComponent);

@@ -1,96 +1,125 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import cuid from "cuid";
 import { Segment, Form, Button } from "semantic-ui-react";
+import { createEvent, updateEvent } from "../eventActions";
 
-export default class EventForm extends Component {
+class EventForm extends Component {
+  state = { ...this.props.event };
 
-  state = {
-    title: '',
-    date: '',
-    city: '',
-    venue: '',
-    hostedBy: ''
-  }
-  
-  componentDidMount() {
-    if(this.props.selectedEvent !== null) {
-      this.setState({
-        ...this.props.selectedEvent, 
-      })
-    }
-  }
-
-  handleFormSubmit = (evt) => {
+  handleFormSubmit = evt => {
     evt.preventDefault();
-    // console.log(this.state);
-    if(this.state.id) {
-      this.props.updateEvent(this.state);
-    } else {
-      this.props.createEvent(this.state);
-    }
-  }
 
-  handleInputChange = (evt) => {
-    const {name, value} = evt.target;
+    if (this.state.id) {
+      this.props.updateEvent(this.state);
+      this.props.history.push(`/events/${this.state.id}`);
+    } else {
+      const newEvent = {
+        ...this.state,
+        id: cuid(),
+        hostPhotoURL: "/assets/user.png"
+      };
+
+      this.props.createEvent(newEvent);
+      this.props.history.push(`/events/${newEvent.id}`);
+    }
+  };
+
+  handleInputChange = evt => {
+    const { name, value } = evt.target;
     this.setState({
       [name]: value
-    })
-  }
+    });
+  };
 
   render() {
-    const {cancelFormOpen} = this.props;
-    const {title, date, city, venue, hostedBy} = this.state;
+    const { title, date, city, venue, hostedBy } = this.state;
 
     return (
       <Segment>
-        <Form  onSubmit={this.handleFormSubmit} autoComplete='off'>
+        <Form onSubmit={this.handleFormSubmit} autoComplete="off">
           <Form.Field>
             <label>Event Title</label>
-            <input 
-              name='title'
-              onChange={this.handleInputChange} 
-              value={title} 
-              placeholder="Event Title" 
+            <input
+              name="title"
+              onChange={this.handleInputChange}
+              value={title}
+              placeholder="Event Title"
             />
           </Form.Field>
           <Form.Field>
             <label>Event Date</label>
-            <input 
-              name='date' 
-              onChange={this.handleInputChange} 
-              value={date} 
-              type="date" 
-              placeholder="Event Date" />
+            <input
+              name="date"
+              onChange={this.handleInputChange}
+              value={date}
+              type="date"
+              placeholder="Event Date"
+            />
           </Form.Field>
           <Form.Field>
             <label>City</label>
-            <input 
-              name='city'
-              onChange={this.handleInputChange} 
+            <input
+              name="city"
+              onChange={this.handleInputChange}
               value={city}
-              placeholder="City event is taking place" />
+              placeholder="City event is taking place"
+            />
           </Form.Field>
           <Form.Field>
             <label>Venue</label>
             <input
-              name='venue'
-              onChange={this.handleInputChange} 
+              name="venue"
+              onChange={this.handleInputChange}
               value={venue}
-              placeholder="Enter the Venue of the event" />
+              placeholder="Enter the Venue of the event"
+            />
           </Form.Field>
           <Form.Field>
             <label>Hosted By</label>
-            <input 
-              name='hostedBy'
-              onChange={this.handleInputChange} 
+            <input
+              name="hostedBy"
+              onChange={this.handleInputChange}
               value={hostedBy}
-              placeholder="Enter the name of person hosting" />
+              placeholder="Enter the name of person hosting"
+            />
           </Form.Field>
           <Button positive type="submit">
             Submit
-           </Button>
-          <Button onClick={cancelFormOpen} type="button">Cancel</Button>
+          </Button>
+          <Button onClick={this.props.history.goBack} type="button">
+            Cancel
+          </Button>
         </Form>
       </Segment>
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const eventId = ownProps.match.params.id;
+
+  console.log("eventId");
+  console.log(eventId);
+
+  let event = {
+    title: "",
+    date: "",
+    city: "",
+    venue: "",
+    hostedBy: ""
+  };
+
+  if (eventId && state.events.length > 0) {
+    event = state.events.filter(event => event.id === eventId)[0];
+  }
+
+  return { event };
+};
+
+const actions = {
+  createEvent,
+  updateEvent
+};
+
+export default connect(mapStateToProps, actions)(EventForm);
