@@ -7,6 +7,13 @@ import { createEvent, updateEvent } from "../eventActions";
 import TextInput from "../../../app/common/form/TextInput";
 import TextArea from "../../../app/common/form/TextArea";
 import SelectInput from "../../../app/common/form/SelectInput";
+import DateInput from "../../../app/common/form/DateInput";
+import {
+  combineValidators,
+  composeValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from "revalidate";
 
 const category = [
   { key: "drinks", text: "Drinks", value: "drinks" },
@@ -16,6 +23,20 @@ const category = [
   { key: "music", text: "Music", value: "music" },
   { key: "travel", text: "Travel", value: "travel" }
 ];
+
+const validate = combineValidators({
+  title: isRequired({ message: "The event title is required" }),
+  category: isRequired({ message: "The event category is required" }),
+  description: composeValidators(
+    isRequired({ message: "Please enter a description" }),
+    hasLengthGreaterThan(4)({
+      message: "Description needs to be at least 5 characters"
+    })
+  )(),
+  city: isRequired("city"),
+  venue: isRequired("venue"),
+  date: isRequired('date')
+});
 
 class EventForm extends Component {
   onFormSubmit = values => {
@@ -36,6 +57,13 @@ class EventForm extends Component {
   };
 
   render() {
+    const {
+      history,
+      initialValues,
+      invalid,
+      submitting,
+      pristine
+    } = this.props;
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -75,13 +103,24 @@ class EventForm extends Component {
               />
               <Field
                 name="date"
-                component={TextInput}
+                component={DateInput}
                 placeholder="Event Date"
+                dateFormat='dd LLL yyyy h:mm a'
+                // type="text"
+                showTimeSelect
+                timeFormat='HH:mm'
               />
-              <Button positive type="submit">
+              <Button disabled={invalid || submitting || pristine } positive type="submit">
                 Submit
               </Button>
-              <Button onClick={this.props.history.goBack} type="button">
+              <Button
+                onClick={
+                  initialValues.id
+                    ? () => history.push(`/events/${initialValues.id}`)
+                    : () => history.push("/events")
+                }
+                type="button"
+              >
                 Cancel
               </Button>
             </Form>
@@ -95,11 +134,9 @@ class EventForm extends Component {
 const mapStateToProps = (state, ownProps) => {
   const eventId = ownProps.match.params.id;
   let event = {};
-
   if (eventId && state.events.length > 0) {
     event = state.events.filter(event => event.id === eventId)[0];
   }
-
   return { initialValues: event };
 };
 
@@ -111,4 +148,4 @@ const actions = {
 export default connect(
   mapStateToProps,
   actions
-)(reduxForm({ form: "eventForm" })(EventForm));
+)(reduxForm({ form: "eventForm", validate })(EventForm));
