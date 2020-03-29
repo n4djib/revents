@@ -1,8 +1,6 @@
 import { createReducer } from "../../app/common/utils/reducerUtils";
 import { CREATE_EVENT, UPDTAE_EVENT, DELETE_EVENT } from "./eventConstants";
 
-
-
  const initialState = [
     {
       id: '1',
