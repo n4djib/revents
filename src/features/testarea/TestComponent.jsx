@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { incrementCounter, decrementCounter } from "./testActions";
+import {
+  // incrementCounter,
+  // decrementCounter,
+  incrementAsync,
+  decrementAsync
+} from "./testActions";
 import { Button } from "semantic-ui-react";
 import TestPlaceInput from "./TestPlaceInput";
 import SimpleMap from "./SimpleMap";
@@ -28,13 +33,34 @@ class TestComponent extends Component {
 
   render() {
     const { latlng } = this.state;
-    const { data, incrementCounter, decrementCounter, openModal } = this.props;
+    const {
+      data,
+      // incrementCounter,
+      // decrementCounter,
+      incrementAsync,
+      decrementAsync,
+      openModal,
+      loading,
+      buttonName
+    } = this.props;
     return (
       <div>
         <h1>Test Component</h1>
         <h3>The Answer is: {data}</h3>
-        <Button onClick={incrementCounter} positive content="Increment" />
-        <Button onClick={decrementCounter} negative content="Decrement" />
+        <Button
+          name="increment"
+          loading={buttonName === 'increment' && loading}
+          onClick={(e) => incrementAsync(e.target.name)}
+          positive
+          content="Increment"
+        />
+        <Button
+          name="decrement"
+          loading={buttonName === 'decrement' && loading}
+          onClick={(e) => decrementAsync(e.target.name)}
+          negative
+          content="Decrement"
+        />
         <Button
           onClick={() => openModal("TestModal", { data: 42 })}
           color="teal"
@@ -51,7 +77,9 @@ class TestComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.test.data
+  data: state.test.data,
+  loading: state.async.loading,
+  buttonName: state.async.elementName
 });
 
 // const mapDispatchToProps = dispatch => ({
@@ -60,9 +88,11 @@ const mapStateToProps = state => ({
 // })
 
 const actions = {
-  incrementCounter,
-  decrementCounter,
-  openModal
+  // incrementCounter,
+  // decrementCounter,
+  openModal,
+  incrementAsync,
+  decrementAsync
 };
 
 export default connect(mapStateToProps, actions)(TestComponent);
