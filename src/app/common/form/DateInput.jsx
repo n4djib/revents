@@ -21,6 +21,7 @@ const DateInput = ({
         placeholderText={placeholder}
         selected={input.value ? new Date(input.value) : null}
         onChange={ date => input.onChange( format(date, dateFormat) ) }
+        // onChange={ date => input.onChange( parseISO(date) ) }
         onBlur={input.onBlur}
         onChangeRaw={(e) => e.preventDefault()}
       />
