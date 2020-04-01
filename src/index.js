@@ -9,17 +9,14 @@ import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 import ReduxToastr from "react-redux-toastr";
 import { configureStore } from "./app/store/configureStore";
 import ScrollToTop from "./app/common/ScrollToTop";
-import { loadEvents } from "./features/events/eventActions";
+// import { loadEvents } from "./features/events/eventActions";
 
 // ReactDOM.render(<App />, document.getElementById('root'));
 
 const rootEl = document.getElementById("root");
 
 const store = configureStore();
-store.dispatch(loadEvents());
-
-// console.log('store.getState()')
-// console.log(store.getState())
+// store.dispatch(loadEvents());
 
 let render = () => {
   ReactDOM.render(

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 // import { Menu, Container, Button } from 'semantic-ui-react'
 import EventListItem from "./EventListItem";
 
@@ -6,8 +6,8 @@ class EventList extends Component {
   render() {
     const { events, selectEvent, deleteEvent } = this.props;
     return (
-      <div>
-        {events.map(event => (
+      <Fragment>
+        {events && events.map(event => (
           <EventListItem
             key={event.id}
             event={event}
@@ -15,7 +15,7 @@ class EventList extends Component {
             deleteEvent={deleteEvent}
           />
         ))}
-      </div>
+      </Fragment>
     );
   }
 }
